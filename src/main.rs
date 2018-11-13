@@ -108,9 +108,15 @@ fn main() {
                         }
                     }
                 }
+                if max_halite <= ((cell.halite as f32) * 1.1) as usize{
+                    navi.mark_unsafe(&ship.position, ship.id);
+                    ship.stay_still()
+                }
+                else{
                 let target_pos = ship.position.directional_offset(max_halite_dir);
                 let direction = navi.naive_navigate(&ship, &target_pos); //max_halite_dir)
                 ship.move_ship(direction)
+                }
             } else {
                 navi.mark_unsafe(&ship.position, ship.id);
                 ship.stay_still()
