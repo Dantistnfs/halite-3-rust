@@ -1,3 +1,5 @@
+#![feature(exclusive_range_pattern)]
+
 #[macro_use]
 extern crate lazy_static;
 extern crate rand;
@@ -58,16 +60,15 @@ fn main() {
         let map = &mut game.map;
 
         let mut command_queue: Vec<Command> = Vec::new();
-        let divider = if game.turn_number < 40 {
-                5 
-            }
-            else if game.turn_number < 100 {
-                8 
-            }
-            else {
-                10 
-            };
 
+        let divider = match game.turn_number {
+            1..20 => 4,
+            21..40 => 5,
+            41..60 => 6,
+            61..100 => 8,
+            101..200 => 10,
+            _ => 20
+        };
 
         for ship_id in &me.ship_ids {
             let ship = &game.ships[ship_id];
@@ -108,7 +109,7 @@ fn main() {
                         }
                     }
                 }
-                if max_halite <= ((cell.halite as f32) * 1.1) as usize{
+                if max_halite <= ((cell.halite as f32) * 1.03) as usize{
                     navi.mark_unsafe(&ship.position, ship.id);
                     ship.stay_still()
                 }
@@ -145,7 +146,7 @@ fn main() {
         }*/
 
         if
-            game.turn_number <= 100 &&
+            game.turn_number <= 150 &&
             me.halite >= game.constants.ship_cost &&
             navi.is_safe(&me.shipyard.position)
         {
