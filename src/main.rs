@@ -1,5 +1,3 @@
-#![feature(exclusive_range_pattern)]
-
 #[macro_use]
 extern crate lazy_static;
 extern crate rand;
@@ -52,9 +50,19 @@ fn main() {
 
     Log::log(&format!("Successfully created bot! My Player ID is {}. Bot rng seed is {}.", game.my_id.0, rng_seed));
 
+    let game_length = match game.map.width {
+        40 => 426,
+        32 => 401,
+        48 => 451,
+        56 => 476,
+        64 => 501,
+        _ => 450
+    };
+
     loop {
         game.update_frame();
         navi.update_frame(&game);
+        let backup_navi = navi.clone();
 
         let me = &game.players[game.my_id.0];
         let map = &mut game.map;
@@ -62,13 +70,28 @@ fn main() {
         let mut command_queue: Vec<Command> = Vec::new();
 
         let divider = match game.turn_number {
-            1..20 => 4,
-            21..40 => 5,
-            41..60 => 6,
-            61..100 => 8,
-            101..200 => 10,
+            1..=20 => 2,
+            21..=40 => 4,
+            41..=60 => 5,
+            61..=100 => 6,
+            101..=200 => 7,
             _ => 20
         };
+
+        let return_minimum = match game.turn_number {
+            1..=100 => 0.98,
+            101..=300 => 0.9,
+            300..=400 => 0.8,
+            _ => 0.7
+        };
+        
+        for ship in &game.ships {
+            if ship.1.position.x == me.shipyard.position.x && ship.1.position.y == me.shipyard.position.y && ship.1.owner != game.my_id {
+                navi.mark_safe(&me.shipyard.position);
+            }
+        }
+
+
 
         for ship_id in &me.ship_ids {
             let ship = &game.ships[ship_id];
@@ -86,11 +109,12 @@ fn main() {
                 }
                 else {
                     let direction = navi.naive_navigate(&ship, &me.shipyard.position);
+                    
                     command_queue.push(ship.move_ship(direction));
                     continue;
                 }
             }
-            else if ship.halite >= ((game.constants.max_halite as f32) * 0.98) as usize{
+            else if ship.halite >= ((game.constants.max_halite as f32) * return_minimum) as usize{
                 Log::log(&format!("Ship {} have more than 980 halite, returning", ship_id.0));
                 ship_status.remove(&ship_id);
                 ship_status.entry(*ship_id).or_insert(ShipStates::Returning);
@@ -100,23 +124,30 @@ fn main() {
                 let random_direction = Direction::get_all_cardinals();
                 let mut max_halite_dir = Direction::Still;
                 let mut max_halite = 0;
+                let mut safe_moves = Vec::new();
                 for possible_direction in random_direction {
                     let target_pos = &ship.position.directional_offset(possible_direction);
                     if navi.is_safe(&target_pos){
+                        safe_moves.push(possible_direction);
                         if map.at_position(target_pos).halite > max_halite {
                             max_halite = map.at_position(target_pos).halite;
                             max_halite_dir = possible_direction;
                         }
                     }
                 }
-                if max_halite <= ((cell.halite as f32) * 1.03) as usize{
+                if ship.position == me.shipyard.position && safe_moves.len() == 1 {
+                    let target_pos = &ship.position.directional_offset(safe_moves[0]);
+                    let direction = navi.naive_navigate(&ship, &target_pos); //max_halite_dir)
+                    ship.move_ship(direction)
+                }
+                else if max_halite <= ((cell.halite as f32) * 1.03) as usize{
                     navi.mark_unsafe(&ship.position, ship.id);
                     ship.stay_still()
                 }
                 else{
-                let target_pos = ship.position.directional_offset(max_halite_dir);
-                let direction = navi.naive_navigate(&ship, &target_pos); //max_halite_dir)
-                ship.move_ship(direction)
+                    let target_pos = ship.position.directional_offset(max_halite_dir);
+                    let direction = navi.naive_navigate(&ship, &target_pos); //max_halite_dir)
+                    ship.move_ship(direction)
                 }
             } else {
                 navi.mark_unsafe(&ship.position, ship.id);
@@ -126,27 +157,28 @@ fn main() {
             command_queue.push(command);
         }
 
-        /*
-        if (480 - game.turn_number) <= 30 { //destroy ships
+        
+        if (game_length - game.turn_number) <= 40 { //destroy ships
+
+            navi = backup_navi.clone();
             Log::log("Random death!");
-            let mut command_queue: Vec<Command> = Vec::new(); //Overide previous rules
+            command_queue = Vec::<Command>::new(); //Overide previous rules
             for ship_id in &me.ship_ids {
                 let ship = &game.ships[ship_id];
                 let cell = map.at_entity(ship);
-                navi.mark_safe(&me.shipyard.position);
+                if !navi.is_safe(&me.shipyard.position) {
+                    navi.mark_safe(&me.shipyard.position)
+                }
                 let direction = navi.naive_navigate(&ship, &me.shipyard.position);
                 let target_pos = ship.position.directional_offset(direction);
-                if target_pos.x == me.shipyard.position.x && target_pos.y == me.shipyard.position.y{
-                    command_queue.push(ship.move_ship(direction));
-                    break;
-                }
+                command_queue.push(ship.move_ship(direction));
             }
-            Log::log(&format!("Steps: {:?}", command_queue));
+            //Log::log(&format!("Steps: {:?}", &command_queue));
 
-        }*/
+        }
 
         if
-            game.turn_number <= 150 &&
+            (game_length - game.turn_number) >= 200 &&
             me.halite >= game.constants.ship_cost &&
             navi.is_safe(&me.shipyard.position)
         {

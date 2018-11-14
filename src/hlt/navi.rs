@@ -4,6 +4,8 @@ use hlt::ship::Ship;
 use hlt::ShipId;
 use hlt::game::Game;
 
+
+#[derive(Clone)]
 pub struct Navi {
     pub width: usize,
     pub height: usize,
@@ -91,19 +93,20 @@ impl Navi {
 
     pub fn naive_navigate(&mut self, ship: &Ship, destination: &Position) -> Direction {
         let ship_position = &ship.position;
-
+        
+        let mut move_direction = Direction::Still;
         // get_unsafe_moves normalizes for us
         for direction in self.get_unsafe_moves(&ship_position, destination) {
             let target_pos = ship_position.directional_offset(direction);
-
             if self.is_safe(&target_pos) {
-                self.mark_unsafe(&target_pos, ship.id);
-                //self.mark_safe(&ship_position);
-                return direction;
+                move_direction = direction;
+                break;
             }
         }
-
-        Direction::Still
+        let target_pos = ship_position.directional_offset(move_direction);
+        //self.mark_safe(&ship_position);
+        self.mark_unsafe(&target_pos, ship.id);
+        move_direction
     }
 
     pub fn normalize(&self, position: &Position) -> Position {
