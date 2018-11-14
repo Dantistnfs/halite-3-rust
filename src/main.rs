@@ -21,6 +21,7 @@ mod hlt;
 enum ShipStates {
 Exploring,
 Returning,
+Mining
 }
 
 
@@ -79,10 +80,8 @@ fn main() {
         };
 
         let return_minimum = match game.turn_number {
-            1..=100 => 0.98,
-            101..=300 => 0.9,
-            300..=400 => 0.8,
-            _ => 0.7
+            1..=100 => 0.99,
+            _ => 0.9,
         };
         
         for ship in &game.ships {
@@ -102,57 +101,61 @@ fn main() {
                 ship_status.insert(ship_id.clone(), ShipStates::Exploring); 
             }
 
-            if ship_status[ship_id] == ShipStates::Returning {
-                if &cell.position == &me.shipyard.position {
-                    ship_status.remove(&ship_id);
-                    ship_status.entry(*ship_id).or_insert(ShipStates::Exploring);
-                }
-                else {
-                    let direction = navi.naive_navigate(&ship, &me.shipyard.position);
-                    
-                    command_queue.push(ship.move_ship(direction));
-                    continue;
-                }
+
+            if &cell.position == &me.shipyard.position {
+                ship_status.remove(&ship_id);
+                ship_status.entry(*ship_id).or_insert(ShipStates::Exploring);
             }
-            else if ship.halite >= ((game.constants.max_halite as f32) * return_minimum) as usize{
+            if ship_status[ship_id] != ShipStates::Returning && ship.halite >= ((game.constants.max_halite as f32) * return_minimum) as usize{
                 Log::log(&format!("Ship {} have more than 980 halite, returning", ship_id.0));
                 ship_status.remove(&ship_id);
                 ship_status.entry(*ship_id).or_insert(ShipStates::Returning);
             }
-
-            let command = if cell.halite < game.constants.max_halite / divider {
-                let random_direction = Direction::get_all_cardinals();
-                let mut max_halite_dir = Direction::Still;
-                let mut max_halite = 0;
-                let mut safe_moves = Vec::new();
-                for possible_direction in random_direction {
-                    let target_pos = &ship.position.directional_offset(possible_direction);
-                    if navi.is_safe(&target_pos){
-                        safe_moves.push(possible_direction);
-                        if map.at_position(target_pos).halite > max_halite {
-                            max_halite = map.at_position(target_pos).halite;
-                            max_halite_dir = possible_direction;
+            if ship_status[ship_id] == ShipStates::Mining && cell.halite < 40 {
+                ship_status.remove(&ship_id);
+                ship_status.entry(*ship_id).or_insert(ShipStates::Exploring);
+            }
+            if ship_status[ship_id] != ShipStates::Returning && cell.halite > (game.constants.max_halite / divider) as usize {
+                ship_status.remove(&ship_id);
+                ship_status.entry(*ship_id).or_insert(ShipStates::Mining);
+            }
+            let command = match ship_status[ship_id] {
+                ShipStates::Returning => {
+                    let direction = navi.naive_navigate(&ship, &me.shipyard.position);
+                    ship.move_ship(direction)
+                },
+                ShipStates::Exploring => {
+                    let random_direction = Direction::get_all_cardinals();
+                    let mut max_halite_dir = Direction::Still;
+                    let mut max_halite = (cell.halite as f32 * 1.25) as usize;
+                    let mut safe_moves = Vec::new();
+                    for possible_direction in random_direction {
+                        let target_pos = &ship.position.directional_offset(possible_direction);
+                        if navi.is_safe(&target_pos){
+                            safe_moves.push(possible_direction);
+                            if map.at_position(target_pos).halite > max_halite {
+                                max_halite = map.at_position(target_pos).halite;
+                                max_halite_dir = possible_direction;
+                            }
                         }
                     }
-                }
-                if ship.position == me.shipyard.position && safe_moves.len() == 1 {
-                    let target_pos = &ship.position.directional_offset(safe_moves[0]);
-                    let direction = navi.naive_navigate(&ship, &target_pos); //max_halite_dir)
-                    ship.move_ship(direction)
-                }
-                else if max_halite <= ((cell.halite as f32) * 1.03) as usize{
-                    navi.mark_unsafe(&ship.position, ship.id);
+                    if ship.position == me.shipyard.position && safe_moves.len() == 1 {
+                        let target_pos = &ship.position.directional_offset(safe_moves[0]);
+                        let direction = navi.naive_navigate(&ship, &target_pos); //max_halite_dir)
+                        ship.move_ship(direction)
+                    }
+                    else {
+                        let target_pos = ship.position.directional_offset(max_halite_dir);
+                        let direction = navi.naive_navigate(&ship, &target_pos); //max_halite_dir)
+                        ship.move_ship(direction)
+                    }
+                },
+                ShipStates::Mining => {
+                    ship.stay_still()
+                },
+                _ => {
                     ship.stay_still()
                 }
-                else{
-                    let target_pos = ship.position.directional_offset(max_halite_dir);
-                    let direction = navi.naive_navigate(&ship, &target_pos); //max_halite_dir)
-                    ship.move_ship(direction)
-                }
-            } else {
-                navi.mark_unsafe(&ship.position, ship.id);
-                ship.stay_still()
-
             };
             command_queue.push(command);
         }
