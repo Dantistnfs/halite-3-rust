@@ -6,6 +6,7 @@ use hlt::PlayerId;
 use hlt::position::Position;
 use hlt::ShipId;
 
+#[derive(Debug)]
 pub struct Ship {
     pub owner: PlayerId,
     pub id: ShipId,
