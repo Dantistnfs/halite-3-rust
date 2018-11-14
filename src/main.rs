@@ -17,7 +17,7 @@ use std::collections::HashMap;
 
 mod hlt;
 
-#[derive(PartialEq, Debug)]
+#[derive(Eq, PartialEq, Debug)]
 enum ShipStates {
 Exploring,
 Returning,
@@ -44,6 +44,7 @@ fn main() {
     let mut ship_status = HashMap::new();
     let mut game = Game::new();
     let mut navi = Navi::new(game.map.width, game.map.height);
+    let mut shipyard_unavalible_steps = 0;
     // At this point "game" variable is populated with initial map data.
     // This is a good place to do computationally expensive start-up pre-processing.
     // As soon as you call "ready" function below, the 2 second per turn timer will start.
@@ -71,17 +72,16 @@ fn main() {
         let mut command_queue: Vec<Command> = Vec::new();
 
         let divider = match game.turn_number {
-            1..=20 => 2,
-            21..=40 => 4,
+            1..=40 => 3,
             41..=60 => 5,
             61..=100 => 6,
             101..=200 => 7,
-            _ => 20
+            _ => 10
         };
 
         let return_minimum = match game.turn_number {
-            1..=100 => 0.99,
-            _ => 0.9,
+            1..=100 => 0.999,
+            _ => 0.95,
         };
         
         for ship in &game.ships {
@@ -90,6 +90,23 @@ fn main() {
             }
         }
 
+        let mut shipyard_surrounding = me.shipyard.position.get_surrounding_cardinals();
+        shipyard_surrounding.push(me.shipyard.position);
+
+        let mut exit_avalible = false;
+        for possible_position in shipyard_surrounding {
+            if navi.is_safe(&possible_position){
+                exit_avalible = true;
+            }
+        };
+        if exit_avalible == false {
+            shipyard_unavalible_steps += 1;
+        }
+        if shipyard_unavalible_steps > 4 {
+            shipyard_unavalible_steps = 0;
+            navi.mark_safe(&me.shipyard.position);
+            navi.mark_safe(&me.shipyard.position.directional_offset(Direction::West));
+        }
 
 
         for ship_id in &me.ship_ids {
@@ -111,7 +128,7 @@ fn main() {
                 ship_status.remove(&ship_id);
                 ship_status.entry(*ship_id).or_insert(ShipStates::Returning);
             }
-            if ship_status[ship_id] == ShipStates::Mining && cell.halite < 40 {
+            if ship_status[ship_id] == ShipStates::Mining && cell.halite <= 20 {
                 ship_status.remove(&ship_id);
                 ship_status.entry(*ship_id).or_insert(ShipStates::Exploring);
             }
@@ -139,7 +156,7 @@ fn main() {
                             }
                         }
                     }
-                    if ship.position == me.shipyard.position && safe_moves.len() == 1 {
+                    if ship.position == me.shipyard.position && safe_moves.len() < 3 && safe_moves.len() > 0 {
                         let target_pos = &ship.position.directional_offset(safe_moves[0]);
                         let direction = navi.naive_navigate(&ship, &target_pos); //max_halite_dir)
                         ship.move_ship(direction)
@@ -181,7 +198,7 @@ fn main() {
         }
 
         if
-            (game_length - game.turn_number) >= 200 &&
+            (game_length - game.turn_number) >= 175 &&
             me.halite >= game.constants.ship_cost &&
             navi.is_safe(&me.shipyard.position)
         {
