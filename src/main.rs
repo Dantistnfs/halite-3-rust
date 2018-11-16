@@ -32,11 +32,13 @@ GoTo
 
 fn main() {
     let args: Vec<String> = env::args().collect();
+    /*
     let rng_seed: u64 = if args.len() > 1 {
         args[1].parse().unwrap()
     } else {
         SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs()
-    };
+    };*/
+    let rng_seed: u64 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
     let seed_bytes: Vec<u8> = (0..16).map(|x| ((rng_seed >> (x % 8)) & 0xFF) as u8).collect();
     let mut rng: XorShiftRng = SeedableRng::from_seed([
         seed_bytes[0], seed_bytes[1], seed_bytes[2], seed_bytes[3],
@@ -59,20 +61,36 @@ fn main() {
         64 => 501,
         _ => 450
     };
-    let filter_radius = game.map.width/6;
+    let filter_divider = 6;
+    let dropoff_turn : usize = 120;
+    let reserve_dropoff_halite = 30;
+    let dropoff_distance_penalty = 100;
+    let mut dropoff_group_send = 15;
+    let search_radius : i32 = 7;
+    let random_death_turn = 20;
+    let exploring_move_multiplier : usize = 125;
+    if args.len() > 8 {
+        let filter_divider : usize = args[1].parse().unwrap();
+        let dropoff_turn : usize = args[2].parse().unwrap();
+        let reserve_dropoff_halite : usize = args[3].parse().unwrap();
+        let dropoff_distance_penalty : usize = args[4].parse().unwrap();
+        let mut dropoff_group_send : usize = args[5].parse().unwrap();
+        let search_radius : usize = args[6].parse().unwrap();
+        let random_death_turn : usize = args[7].parse().unwrap();
+        let exploring_move_multiplier: usize = args[8].parse().unwrap();
+    }
+    let exploring_move_multiplier: f32 = exploring_move_multiplier as f32 / 100.0;
 
-    
+
+    let filter_radius = game.map.width/filter_divider;
+
     let mut shipyard_unavalible_steps = 0;
     let mut dropoff_creating = 0;
     let mut ship_id_for_dropoff = hlt::ShipId(99999);
     let mut minimum_distance_to_dropoff = 9999; 
-    let mut dropoff_group_send = 15;
-    let reserve_dropoff_halite = 30;
-    let dropoff_distance_penalty = 100;
-    let dropoff_turn = 120;
+    
 
     let search_start = time::Instant::now();
-    let search_radius : i32 = 8;
     let mut possible_cells_list : Vec<Vec<isize>> = Vec::new();
     for map_x in 0..game.map.width {
         for map_y in 0..game.map.height {
@@ -105,6 +123,8 @@ fn main() {
     Game::ready("MyRustBot");
 
     Log::log(&format!("Successfully created bot! My Player ID is {}. Bot rng seed is {}.", game.my_id.0, rng_seed));
+    Log::log(&format!("dropoff turn: {}", dropoff_turn));
+    Log::log(&format!("args vector: {:?}", args));
 
     let mut ships_went_to_dropoff : Vec<usize> = Vec::new();
 
@@ -128,7 +148,7 @@ fn main() {
         };
 
         let return_minimum = match game.turn_number {
-            1..=100 => 0.999,
+            1..=100 => 1.0,
             101..=350 => 0.95,
             _ => 0.9,
         };
@@ -265,7 +285,7 @@ fn main() {
                 ShipStates::Exploring => {
                     let random_direction = Direction::get_all_cardinals();
                     let mut max_halite_dir = Direction::Still;
-                    let mut max_halite = (cell.halite as f32 * 1.25) as usize;
+                    let mut max_halite = (cell.halite as f32 * exploring_move_multiplier) as usize;
                     let mut safe_moves = Vec::new();
                     for possible_direction in random_direction {
                         let target_pos = &ship.position.directional_offset(possible_direction);
@@ -277,8 +297,26 @@ fn main() {
                             }
                         }
                     }
-                    if ship.position == me.shipyard.position && safe_moves.len() < 3 && safe_moves.len() > 0 {
-                        let target_pos = &ship.position.directional_offset(safe_moves[0]);
+                    let mut closest_distance = 99999;
+                    let mut closest_id = hlt::DropoffId(0);
+                    for dropoff_id in &me.dropoff_ids{
+                        let distance_to_dropoff = map.calculate_distance(&ship.position, &game.dropoffs[dropoff_id].position);
+                        if distance_to_dropoff <= closest_distance{
+                            closest_distance = distance_to_dropoff;
+                            closest_id = *dropoff_id;
+                        }
+                    }
+                    let distance_to_shipyard = map.calculate_distance(&ship.position, &me.shipyard.position);
+                    if (distance_to_shipyard < 2 || closest_distance < 2) && ((safe_moves.len() < 4 && safe_moves.len() > 1) || max_halite == 0) {
+                        let target_pos = if safe_moves.len() > 1 {
+                            ship.position.directional_offset(safe_moves[rng.gen_range(0, safe_moves.len())])
+                        }
+                        else if safe_moves.len() == 1 {
+                            ship.position.directional_offset(safe_moves[0])
+                        }
+                        else {
+                            ship.position.directional_offset(max_halite_dir)
+                        };
                         let direction = navi.naive_navigate(&ship, &target_pos); //max_halite_dir)
                         ship.move_ship(direction)
                     }
@@ -294,10 +332,10 @@ fn main() {
                 ShipStates::SettlingDropoff => {
                     let direction = navi.naive_navigate(&ship, &Position{x: possible_cells_list[0][0] as i32, y: possible_cells_list[0][1] as i32});
                     let cell_free = &cell.structure.is_some();
-                    if direction == Direction::Still && (me.halite) > 5000 && cell_free.clone() {
+                    if direction == Direction::Still && (me.halite) > 5000 && !cell_free.clone() {
                         dropoff_creating = 2;
                         ship.make_dropoff()
-                    } else if !cell_free && direction == Direction::Still {
+                    } else if cell_free.clone() && direction == Direction::Still {
                         possible_cells_list[0][0] += 1;
                         ship.move_ship(direction)
                     } else {
@@ -330,7 +368,7 @@ fn main() {
         }
 
         
-        if (game_length - game.turn_number) <= 30 { //destroy ships
+        if (game_length - game.turn_number) <= random_death_turn { //destroy ships
 
             navi = backup_navi.clone();
             Log::log("Random death!");
