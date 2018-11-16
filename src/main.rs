@@ -68,21 +68,24 @@ fn main() {
     let mut minimum_distance_to_dropoff = 9999; 
     let mut dropoff_group_send = 15;
     let reserve_dropoff_halite = 30;
+    let dropoff_distance_penalty = 100;
     let dropoff_turn = 120;
 
     let search_start = time::Instant::now();
     let search_radius : i32 = 8;
-    let mut possible_cells_list : Vec<Vec<usize>> = Vec::new();
+    let mut possible_cells_list : Vec<Vec<isize>> = Vec::new();
     for map_x in 0..game.map.width {
         for map_y in 0..game.map.height {
             let mut halite_sum = 0;
             for x in -search_radius..search_radius {
                 for y in -search_radius..search_radius {
                     halite_sum += game.map.at_position(&Position{x:(map_x as i32 + x), 
-                                                                 y:(map_y as i32 + y)}).halite;
+                                                                 y:(map_y as i32 + y)}).halite as isize;
                 }
             }
-            possible_cells_list.push(vec![map_x, map_y, halite_sum.clone()]);
+            let distance_penalty = dropoff_distance_penalty * game.map.calculate_distance(&game.players[game.my_id.0].shipyard.position, &Position{x: map_x as i32, y: map_y as i32});
+            halite_sum -= distance_penalty as isize * ((distance_penalty as f32).log2()) as isize;
+            possible_cells_list.push(vec![map_x as isize , map_y as isize, halite_sum.clone()]);
         }
     }
 
@@ -290,9 +293,13 @@ fn main() {
                 },
                 ShipStates::SettlingDropoff => {
                     let direction = navi.naive_navigate(&ship, &Position{x: possible_cells_list[0][0] as i32, y: possible_cells_list[0][1] as i32});
-                    if direction == Direction::Still && (me.halite) > 5000{
+                    let cell_free = &cell.structure.is_some();
+                    if direction == Direction::Still && (me.halite) > 5000 && cell_free.clone() {
                         dropoff_creating = 2;
                         ship.make_dropoff()
+                    } else if !cell_free && direction == Direction::Still {
+                        possible_cells_list[0][0] += 1;
+                        ship.move_ship(direction)
                     } else {
                         ship.move_ship(direction)
                     }
