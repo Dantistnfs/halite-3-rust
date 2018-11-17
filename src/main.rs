@@ -61,24 +61,49 @@ fn main() {
         64 => 501,
         _ => 450
     };
-    let filter_divider = 6;
-    let dropoff_turn : usize = 120;
-    let reserve_dropoff_halite = 30;
-    let dropoff_distance_penalty = 100;
+    let mut filter_divider = 6;
+    let mut dropoff_turn : usize = 120;
+    let mut reserve_dropoff_halite = 30;
+    let mut dropoff_distance_penalty = 100;
     let mut dropoff_group_send = 15;
-    let search_radius : i32 = 7;
-    let random_death_turn = 20;
-    let exploring_move_multiplier : usize = 125;
+    let mut search_radius : i32 = 7;
+    let mut random_death_turn = 20;
+    let mut exploring_move_multiplier : usize = 125;
+    let mut stop_producing_ships_turn : usize = 150;
     if args.len() > 8 {
-        let filter_divider : usize = args[1].parse().unwrap();
-        let dropoff_turn : usize = args[2].parse().unwrap();
-        let reserve_dropoff_halite : usize = args[3].parse().unwrap();
-        let dropoff_distance_penalty : usize = args[4].parse().unwrap();
-        let mut dropoff_group_send : usize = args[5].parse().unwrap();
-        let search_radius : usize = args[6].parse().unwrap();
-        let random_death_turn : usize = args[7].parse().unwrap();
-        let exploring_move_multiplier: usize = args[8].parse().unwrap();
+        filter_divider = args[1].parse().unwrap();
+        dropoff_turn = args[2].parse().unwrap();
+        reserve_dropoff_halite = args[3].parse().unwrap();
+        dropoff_distance_penalty = args[4].parse().unwrap();
+        dropoff_group_send = args[5].parse().unwrap();
+        search_radius = args[6].parse().unwrap();
+        random_death_turn = args[7].parse().unwrap();
+        exploring_move_multiplier = args[8].parse().unwrap();
+        stop_producing_ships_turn = args[9].parse().unwrap();
     }
+    /* 
+    if game.map.width == 40 {
+        let filter_divider = 0;
+        let dropoff_turn : usize = 40;
+        let reserve_dropoff_halite = 1;
+        let dropoff_distance_penalty = 51;
+        let mut dropoff_group_send = 0;
+        let search_radius : i32 = 0;
+        let random_death_turn = 0;
+        let exploring_move_multiplier : usize = 105;
+    }
+
+    if game.map.width == 64 {
+        filter_divider = 0;
+        let dropoff_turn : usize = 51;
+        let reserve_dropoff_halite = 0;
+        let dropoff_distance_penalty = 52;
+        let mut dropoff_group_send = 1;
+        let search_radius : i32 = 0;
+        let random_death_turn = 0;
+        let exploring_move_multiplier : usize = 120;
+    }*/
+
     let exploring_move_multiplier: f32 = exploring_move_multiplier as f32 / 100.0;
 
 
@@ -125,6 +150,8 @@ fn main() {
     Log::log(&format!("Successfully created bot! My Player ID is {}. Bot rng seed is {}.", game.my_id.0, rng_seed));
     Log::log(&format!("dropoff turn: {}", dropoff_turn));
     Log::log(&format!("args vector: {:?}", args));
+    Log::log(&format!("filter radius: {:?}", filter_radius));
+    Log::log(&format!("filter divider: {:?}", filter_divider));
 
     let mut ships_went_to_dropoff : Vec<usize> = Vec::new();
 
@@ -217,7 +244,7 @@ fn main() {
             if dropoff_creating == 2 && dropoff_group_send > 1 && ship_status[ship_id] != ShipStates::GoTo && !ships_went_to_dropoff.contains(&ship_id.0) {
 
                 Log::log(&format!("Ship {} will go to dropoff", ship_id.0));
-                ships_went_to_dropoff.push(ship_id.0);
+                ships_went_to_dropoff.push(ship_id.clone().0);
                 ship_status.remove(&ship_id);
                 ship_status.entry(*ship_id).or_insert(ShipStates::GoTo);
                 dropoff_group_send -= 1;
@@ -332,7 +359,7 @@ fn main() {
                 ShipStates::SettlingDropoff => {
                     let direction = navi.naive_navigate(&ship, &Position{x: possible_cells_list[0][0] as i32, y: possible_cells_list[0][1] as i32});
                     let cell_free = &cell.structure.is_some();
-                    if direction == Direction::Still && (me.halite) > 5000 && !cell_free.clone() {
+                    if direction == Direction::Still && (me.halite + &cell.halite + ship.halite) > 5000 && !cell_free.clone() {
                         dropoff_creating = 2;
                         ship.make_dropoff()
                     } else if cell_free.clone() && direction == Direction::Still {
@@ -406,7 +433,7 @@ fn main() {
         }
 
         if
-            (game_length - game.turn_number) >= 200 &&
+            (game_length - game.turn_number) >= stop_producing_ships_turn &&
             me.halite >= game.constants.ship_cost &&
             navi.is_safe(&me.shipyard.position) &&
             dropoff_creating != 1 &&

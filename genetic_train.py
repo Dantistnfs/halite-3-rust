@@ -16,7 +16,8 @@ bot_values_dict = {
         "dropoff_group_send" : 15,
         "search_radius" : 7,
         "random_death_turn": 20,
-        "exploring_move_multiplier": 125
+        "exploring_move_multiplier": 125,
+        "stop_producing_ships_turn": 150
         }
 
 
@@ -43,12 +44,12 @@ generation = 0
 while True:
     print("Generation: ", generation)
     #generate variants
-    variants = []
+    variants = [bot_values_dict.copy()]
     for i in range(0,10):
         temp_dict = bot_values_dict.copy()
         for key, value in temp_dict.items():
-            if random.random() > 0.7:
-                temp_dict[key] = int(value * (1 + random.normalvariate(0,8)/100))
+            if random.random() > 0.5:
+                temp_dict[key] = int(value * (1 + random.normalvariate(0,10)/100))
         variants.append(temp_dict.copy())
 
 
@@ -58,10 +59,10 @@ while True:
 
 
     for i in tqdm(range(0,1000)):
-        bots_num = random.sample(range(0,len(global_bots_list)), 2)
+        bots_num = random.sample(range(0,len(global_bots_list)), 4)
 
-        bots = [global_bots_list[bots_num[0]], global_bots_list[bots_num[1]]]
-        command = gen_match(sizes[1], bots)
+        bots = [global_bots_list[bots_num[0]], global_bots_list[bots_num[1]], global_bots_list[bots_num[2]], global_bots_list[bots_num[3]]]
+        command = gen_match(sizes[2], bots)
         b = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
         out, err = b.communicate()
         bot_0_rank = json.loads(out.decode())['stats']["0"]["rank"]
