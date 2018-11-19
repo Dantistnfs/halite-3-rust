@@ -1,23 +1,31 @@
 import random 
 import os
+import sys
 import subprocess
 import json
-from trueskill import Rating, quality_1vs1, rate_1vs1
+from trueskill import Rating, quality_1vs1, rate_1vs1, rate
 from tqdm import tqdm
 
 sizes = [32, 40, 48, 56, 64]
 
+map_size = sizes[2]
+players_num = 4
+
+if len(sys.argv) > 2:
+    map_size = sizes[int(sys.argv[1])]
+    players_num = int(sys.argv[2])
+
 
 bot_values_dict = {
-        "filter_divider": 6,
-        "dropoff_turn": 120,
-        "reserve_dropoff_halite": 30,
-        "dropoff_distance_penalty" :100,
-        "dropoff_group_send" : 15,
-        "search_radius" : 7,
+        "filter_divider": 3,
+        "dropoff_turn": 150,
+        "reserve_dropoff_halite": 18,
+        "dropoff_distance_penalty" :78,
+        "dropoff_group_send" : 12,
+        "search_radius" : 0,
         "random_death_turn": 20,
-        "exploring_move_multiplier": 125,
-        "stop_producing_ships_turn": 150
+        "exploring_move_multiplier": 130,
+        "stop_producing_ships_turn": 170
         }
 
 
@@ -42,7 +50,7 @@ def gen_match(size, bots_list):
 generation = 0
 
 while True:
-    print("Generation: ", generation)
+    print("Generation: ", generation, "Mapsize:", map_size, "Player num:", players_num)
     #generate variants
     variants = [bot_values_dict.copy()]
     for i in range(0,10):
@@ -59,20 +67,51 @@ while True:
 
 
     for i in tqdm(range(0,1000)):
-        bots_num = random.sample(range(0,len(global_bots_list)), 4)
-
-        bots = [global_bots_list[bots_num[0]], global_bots_list[bots_num[1]], global_bots_list[bots_num[2]], global_bots_list[bots_num[3]]]
-        command = gen_match(sizes[2], bots)
+        bots_num = random.sample(range(0,len(global_bots_list)), players_num)
+        if players_num == 2:
+            bots = [global_bots_list[bots_num[0]], global_bots_list[bots_num[1]]]#, global_bots_list[bots_num[2]], global_bots_list[bots_num[3]]]
+        else:
+            bots = [global_bots_list[bots_num[0]], global_bots_list[bots_num[1]], global_bots_list[bots_num[2]], global_bots_list[bots_num[3]]]
+        command = gen_match(map_size, bots)
         b = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
         out, err = b.communicate()
-        bot_0_rank = json.loads(out.decode())['stats']["0"]["rank"]
-        if bot_0_rank == 1: #so he won
-            new_r1, new_r2 = rate_1vs1(bots[0][1], bots[1][1])
-        else:
-            new_r2, new_r1 = rate_1vs1(bots[1][1], bots[0][1])
+        if players_num == 2:
+            bot_0_rank = json.loads(out.decode())['stats']["0"]["rank"]
+            if bot_0_rank == 1: #so he won
+                new_r1, new_r2 = rate_1vs1(bots[0][1], bots[1][1])
+            else:
+                new_r2, new_r1 = rate_1vs1(bots[1][1], bots[0][1])
 
-        global_bots_list[bots_num[0]][1] = new_r1
-        global_bots_list[bots_num[1]][1] = new_r2
+            global_bots_list[bots_num[0]][1] = new_r1
+            global_bots_list[bots_num[1]][1] = new_r2
+        else:
+            bot_0_rank = json.loads(out.decode())['stats']["0"]["rank"]
+            bot_1_rank = json.loads(out.decode())['stats']["1"]["rank"]
+            bot_2_rank = json.loads(out.decode())['stats']["2"]["rank"]
+            bot_3_rank = json.loads(out.decode())['stats']["3"]["rank"]
+
+            rating_group = []
+            for i in range(1,5):
+                if bot_0_rank == i:
+                    rating_group.append((global_bots_list[bots_num[0]][1],))
+                if bot_1_rank == i:
+                    rating_group.append((global_bots_list[bots_num[1]][1],))
+                if bot_2_rank == i:
+                    rating_group.append((global_bots_list[bots_num[2]][1],))
+                if bot_3_rank == i:
+                    rating_group.append((global_bots_list[bots_num[3]][1],))
+            new_rate = rate(rating_group)
+            for i in range(1,5):
+                if bot_0_rank == i:
+                    global_bots_list[bots_num[0]][1] = new_rate[i-1][0]
+                if bot_1_rank == i:
+                    global_bots_list[bots_num[1]][1] = new_rate[i-1][0]
+                if bot_2_rank == i:
+                    global_bots_list[bots_num[2]][1] = new_rate[i-1][0]
+                if bot_3_rank == i:
+                    global_bots_list[bots_num[3]][1] = new_rate[i-1][0]
+
+
 
     converted_list = []
     for bot in global_bots_list:

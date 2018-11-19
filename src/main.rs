@@ -61,16 +61,90 @@ fn main() {
         64 => 501,
         _ => 450
     };
-    let mut filter_divider = 6;
-    let mut dropoff_turn : usize = 120;
-    let mut reserve_dropoff_halite = 30;
-    let mut dropoff_distance_penalty = 100;
-    let mut dropoff_group_send = 15;
-    let mut search_radius : i32 = 7;
+    let mut filter_divider = 3;
+    let mut dropoff_turn : usize = 150;
+    let mut reserve_dropoff_halite = 18;
+    let mut dropoff_distance_penalty = 78;
+    let mut dropoff_group_send = 12;
+    let mut search_radius : i32 = 5;
     let mut random_death_turn = 20;
-    let mut exploring_move_multiplier : usize = 125;
-    let mut stop_producing_ships_turn : usize = 150;
-    if args.len() > 8 {
+    let mut exploring_move_multiplier : usize = 130;
+    let mut stop_producing_ships_turn : usize = 170;
+    
+    if game.players.len() == 2 { 
+        if game.map.width == 32 {
+            filter_divider = 2;
+            dropoff_turn = 176;
+            reserve_dropoff_halite = 0;
+            dropoff_distance_penalty = 97;
+            dropoff_group_send = 0;
+            search_radius = 1;
+            random_death_turn = 12;
+            exploring_move_multiplier = 163;
+            stop_producing_ships_turn = 192;
+        }
+        if game.map.width == 48 {
+            filter_divider = 2;
+            dropoff_turn = 209;
+            reserve_dropoff_halite = 4;
+            dropoff_distance_penalty = 69;
+            dropoff_group_send = 3;
+            search_radius = 1;
+            random_death_turn = 17;
+            exploring_move_multiplier = 143;
+            stop_producing_ships_turn = 174;
+        }
+        if game.map.width == 64 {
+            filter_divider = 3;
+            dropoff_turn = 140;
+            reserve_dropoff_halite = 3;
+            dropoff_distance_penalty = 27;
+            dropoff_group_send = 12;
+            search_radius = 2;
+            random_death_turn = 25;
+            exploring_move_multiplier = 147;
+            stop_producing_ships_turn = 204;
+        }
+
+    }
+    if game.players.len() == 4 { 
+        if game.map.width == 32 {
+            filter_divider = 1;
+            dropoff_turn = 122;
+            reserve_dropoff_halite = 0;
+            dropoff_distance_penalty = 64;
+            dropoff_group_send = 1;
+            search_radius = 1;
+            random_death_turn = 21;
+            exploring_move_multiplier = 145;
+            stop_producing_ships_turn = 179;
+        }
+        if game.map.width == 48 {
+            filter_divider = 2;
+            dropoff_turn = 173;
+            reserve_dropoff_halite = 16;
+            dropoff_distance_penalty = 79;
+            dropoff_group_send = 9;
+            search_radius = 1;
+            random_death_turn = 19;
+            exploring_move_multiplier = 160;
+            stop_producing_ships_turn = 203;
+        }
+        if game.map.width == 64 {
+            filter_divider = 3;
+            dropoff_turn = 132;
+            reserve_dropoff_halite = 21;
+            dropoff_distance_penalty = 53;
+            dropoff_group_send = 9;
+            search_radius = 4;
+            random_death_turn = 26;
+            exploring_move_multiplier = 133;
+            stop_producing_ships_turn = 180;
+        }
+
+    }
+
+    if args.len() > 9 {
         filter_divider = args[1].parse().unwrap();
         dropoff_turn = args[2].parse().unwrap();
         reserve_dropoff_halite = args[3].parse().unwrap();
@@ -81,28 +155,7 @@ fn main() {
         exploring_move_multiplier = args[8].parse().unwrap();
         stop_producing_ships_turn = args[9].parse().unwrap();
     }
-    /* 
-    if game.map.width == 40 {
-        let filter_divider = 0;
-        let dropoff_turn : usize = 40;
-        let reserve_dropoff_halite = 1;
-        let dropoff_distance_penalty = 51;
-        let mut dropoff_group_send = 0;
-        let search_radius : i32 = 0;
-        let random_death_turn = 0;
-        let exploring_move_multiplier : usize = 105;
-    }
-
-    if game.map.width == 64 {
-        filter_divider = 0;
-        let dropoff_turn : usize = 51;
-        let reserve_dropoff_halite = 0;
-        let dropoff_distance_penalty = 52;
-        let mut dropoff_group_send = 1;
-        let search_radius : i32 = 0;
-        let random_death_turn = 0;
-        let exploring_move_multiplier : usize = 120;
-    }*/
+     
 
     let exploring_move_multiplier: f32 = exploring_move_multiplier as f32 / 100.0;
 
@@ -212,7 +265,7 @@ fn main() {
             Log::log(&format!("Dropoff ship info: {:?}.", game.ships[&ship_id_for_dropoff])); 
         }
 
-        if game.turn_number > dropoff_turn && dropoff_creating == 0{
+        if game.turn_number > dropoff_turn && dropoff_creating == 0 && possible_cells_list.len() > 0{
             for ship_id in &me.ship_ids {
                 let ship = &game.ships[ship_id];
                 let possible_distance = map.calculate_distance(&ship.position, &Position{x:possible_cells_list[0][0] as i32, y:possible_cells_list[0][1] as i32});

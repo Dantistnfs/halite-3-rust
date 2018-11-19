@@ -5,3 +5,6 @@ version = "0.1.0"
 [dependencies]
 lazy_static = "1"
 rand = "0.5"
+
+[profile.release]
+debug = true

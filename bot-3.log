@@ -1,0 +1,6 @@
+Map possibilities calculated in:  0.005.
+Successfully created bot! My Player ID is 3. Bot rng seed is 1542527380.
+dropoff turn: 132
+args vector: ["./target/release/my_bot", "3", "132", "21", "53", "9", "4", "26", "133", "180"]
+filter radius: 21
+filter divider: 3
