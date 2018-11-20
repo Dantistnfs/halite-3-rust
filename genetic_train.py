@@ -5,6 +5,7 @@ import subprocess
 import json
 from trueskill import Rating, quality_1vs1, rate_1vs1, rate
 from tqdm import tqdm
+import collections
 
 sizes = [32, 40, 48, 56, 64]
 
@@ -16,17 +17,17 @@ if len(sys.argv) > 2:
     players_num = int(sys.argv[2])
 
 
-bot_values_dict = {
-        "filter_divider": 3,
+bot_values_dict = collections.OrderedDict({
+        "filter_divider": 2,
         "dropoff_turn": 150,
         "reserve_dropoff_halite": 18,
         "dropoff_distance_penalty" :78,
         "dropoff_group_send" : 12,
-        "search_radius" : 0,
+        "search_radius" : 1,
         "random_death_turn": 20,
         "exploring_move_multiplier": 130,
         "stop_producing_ships_turn": 170
-        }
+        })
 
 
 
@@ -84,7 +85,14 @@ while True:
 
             global_bots_list[bots_num[0]][1] = new_r1
             global_bots_list[bots_num[1]][1] = new_r2
+
+            for bot, key in json.loads(out.decode())['terminated'].items():
+                if key == True:
+                    global_bots_list.pop(bots_num[int(bot)])
+                    break
+
         else:
+            # print(out.decode())
             bot_0_rank = json.loads(out.decode())['stats']["0"]["rank"]
             bot_1_rank = json.loads(out.decode())['stats']["1"]["rank"]
             bot_2_rank = json.loads(out.decode())['stats']["2"]["rank"]
@@ -100,6 +108,10 @@ while True:
                     rating_group.append((global_bots_list[bots_num[2]][1],))
                 if bot_3_rank == i:
                     rating_group.append((global_bots_list[bots_num[3]][1],))
+
+            #for bot in global_bots_list:
+            #    print([bot[2], (bot[1].mu - 3*bot[1].sigma), bot[1]])
+
             new_rate = rate(rating_group)
             for i in range(1,5):
                 if bot_0_rank == i:
@@ -111,6 +123,15 @@ while True:
                 if bot_3_rank == i:
                     global_bots_list[bots_num[3]][1] = new_rate[i-1][0]
 
+
+            #for bot in global_bots_list:
+            #    print([bot[2], (bot[1].mu - 3*bot[1].sigma), bot[1]])
+
+            # check if some of bots were terminated and drop them
+            for bot, key in json.loads(out.decode())['terminated'].items():
+                if key == True:
+                    global_bots_list.pop(bots_num[int(bot)])
+                    break
 
 
     converted_list = []
