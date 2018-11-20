@@ -17,17 +17,19 @@ if len(sys.argv) > 2:
     players_num = int(sys.argv[2])
 
 
-bot_values_dict = collections.OrderedDict({
-        "filter_divider": 2,
-        "dropoff_turn": 150,
-        "reserve_dropoff_halite": 18,
-        "dropoff_distance_penalty" :78,
-        "dropoff_group_send" : 12,
-        "search_radius" : 1,
-        "random_death_turn": 20,
-        "exploring_move_multiplier": 130,
-        "stop_producing_ships_turn": 170
-        })
+bot_values_dict = collections.OrderedDict()
+
+
+bot_values_dict["filter_divider"] = 2
+bot_values_dict["dropoff_turn"] = 150
+bot_values_dict["reserve_dropoff_halite"] = 18
+bot_values_dict["dropoff_distance_penalty"] =78
+bot_values_dict["dropoff_group_send"] = 12
+bot_values_dict["search_radius"] = 1
+bot_values_dict["random_death_turn"] = 20
+bot_values_dict["exploring_move_multiplier"] = 130
+bot_values_dict["stop_producing_ships_turn"] = 170
+
 
 
 
