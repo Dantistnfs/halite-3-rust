@@ -1,9 +1,9 @@
-Map possibilities calculated in:  0.
-Successfully created bot! My Player ID is 2. Bot rng seed is 1542715594.
-dropoff turn: 139
-args vector: ["./target/release/my_bot", "1", "139", "18", "71", "12", "1", "20", "130", "163"]
-filter radius: 32
-filter divider: 1
+Map possibilities calculated in:  0.002.
+Successfully created bot! My Player ID is 2. Bot rng seed is 1542717229.
+dropoff turn: 168
+args vector: ["./target/release/my_bot", "2", "168", "18", "78", "12", "1", "20", "130", "171"]
+filter radius: 24
+filter divider: 2
 =============== TURN 1 ================
 =============== TURN 2 ================
 =============== TURN 3 ================
@@ -39,17 +39,19 @@ filter divider: 1
 =============== TURN 33 ================
 =============== TURN 34 ================
 =============== TURN 35 ================
-=============== TURN 36 ================
 Ship 1 have more than 980 halite, returning
+=============== TURN 36 ================
 =============== TURN 37 ================
+Ship 17 have more than 980 halite, returning
 =============== TURN 38 ================
 =============== TURN 39 ================
-=============== TURN 40 ================
 Ship 9 have more than 980 halite, returning
+=============== TURN 40 ================
 =============== TURN 41 ================
 =============== TURN 42 ================
 =============== TURN 43 ================
 =============== TURN 44 ================
+Ship 13 have more than 980 halite, returning
 =============== TURN 45 ================
 =============== TURN 46 ================
 =============== TURN 47 ================
@@ -63,12 +65,10 @@ Ship 9 have more than 980 halite, returning
 =============== TURN 55 ================
 =============== TURN 56 ================
 =============== TURN 57 ================
+Ship 5 have more than 980 halite, returning
 =============== TURN 58 ================
-Ship 16 have more than 980 halite, returning
-Ship 12 have more than 980 halite, returning
 =============== TURN 59 ================
 =============== TURN 60 ================
-Ship 5 have more than 980 halite, returning
 =============== TURN 61 ================
 =============== TURN 62 ================
 =============== TURN 63 ================
@@ -91,7 +91,6 @@ Ship 5 have more than 980 halite, returning
 =============== TURN 80 ================
 =============== TURN 81 ================
 =============== TURN 82 ================
-Ship 20 have more than 980 halite, returning
 =============== TURN 83 ================
 =============== TURN 84 ================
 =============== TURN 85 ================
@@ -99,24 +98,25 @@ Ship 20 have more than 980 halite, returning
 =============== TURN 87 ================
 =============== TURN 88 ================
 =============== TURN 89 ================
+Ship 17 have more than 980 halite, returning
 =============== TURN 90 ================
-Ship 9 have more than 980 halite, returning
 =============== TURN 91 ================
 =============== TURN 92 ================
 =============== TURN 93 ================
 =============== TURN 94 ================
 =============== TURN 95 ================
 =============== TURN 96 ================
-Ship 1 have more than 980 halite, returning
 =============== TURN 97 ================
 =============== TURN 98 ================
 =============== TURN 99 ================
 =============== TURN 100 ================
+Ship 1 have more than 980 halite, returning
 =============== TURN 101 ================
+Ship 13 have more than 980 halite, returning
 =============== TURN 102 ================
-Ship 12 have more than 980 halite, returning
 =============== TURN 103 ================
 =============== TURN 104 ================
+Ship 24 have more than 980 halite, returning
 =============== TURN 105 ================
 =============== TURN 106 ================
 =============== TURN 107 ================
@@ -124,62 +124,59 @@ Ship 12 have more than 980 halite, returning
 =============== TURN 109 ================
 =============== TURN 110 ================
 =============== TURN 111 ================
+Ship 26 have more than 980 halite, returning
 =============== TURN 112 ================
 =============== TURN 113 ================
 =============== TURN 114 ================
-Ship 31 have more than 980 halite, returning
 =============== TURN 115 ================
 =============== TURN 116 ================
 =============== TURN 117 ================
 =============== TURN 118 ================
 =============== TURN 119 ================
+Ship 9 have more than 980 halite, returning
 =============== TURN 120 ================
 =============== TURN 121 ================
-Ship 33 have more than 980 halite, returning
 =============== TURN 122 ================
+Ship 5 have more than 980 halite, returning
+Ship 28 have more than 980 halite, returning
 =============== TURN 123 ================
-Ship 34 have more than 980 halite, returning
 =============== TURN 124 ================
 =============== TURN 125 ================
 =============== TURN 126 ================
 =============== TURN 127 ================
 =============== TURN 128 ================
+Ship 34 have more than 980 halite, returning
 =============== TURN 129 ================
 =============== TURN 130 ================
 =============== TURN 131 ================
 =============== TURN 132 ================
+Ship 17 have more than 980 halite, returning
 =============== TURN 133 ================
-Ship 5 have more than 980 halite, returning
 =============== TURN 134 ================
 =============== TURN 135 ================
 =============== TURN 136 ================
-Ship 16 have more than 980 halite, returning
 =============== TURN 137 ================
 =============== TURN 138 ================
 =============== TURN 139 ================
 =============== TURN 140 ================
-Ship 36 have more than 980 halite, returning
 =============== TURN 141 ================
 =============== TURN 142 ================
 =============== TURN 143 ================
 =============== TURN 144 ================
-Ship 20 have more than 980 halite, returning
 =============== TURN 145 ================
-Ship 9 have more than 980 halite, returning
 =============== TURN 146 ================
 =============== TURN 147 ================
 =============== TURN 148 ================
 =============== TURN 149 ================
 =============== TURN 150 ================
-Ship 45 have more than 980 halite, returning
 =============== TURN 151 ================
-Ship 1 have more than 980 halite, returning
 =============== TURN 152 ================
 =============== TURN 153 ================
 =============== TURN 154 ================
 =============== TURN 155 ================
 =============== TURN 156 ================
 =============== TURN 157 ================
+Ship 49 have more than 980 halite, returning
 =============== TURN 158 ================
 =============== TURN 159 ================
 =============== TURN 160 ================
@@ -191,93 +188,243 @@ Ship 1 have more than 980 halite, returning
 =============== TURN 166 ================
 =============== TURN 167 ================
 =============== TURN 168 ================
-Ship 40 have more than 980 halite, returning
+Ship 56 have more than 980 halite, returning
 =============== TURN 169 ================
+Ship 46 have more than 980 halite, returning
 =============== TURN 170 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 36 }, halite: 256, max_halite: 1000 }.
 =============== TURN 171 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 37 }, halite: 245, max_halite: 1000 }.
 =============== TURN 172 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 38 }, halite: 243, max_halite: 1000 }.
 =============== TURN 173 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 39 }, halite: 242, max_halite: 1000 }.
 =============== TURN 174 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 40 }, halite: 242, max_halite: 1000 }.
 =============== TURN 175 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 41 }, halite: 241, max_halite: 1000 }.
 =============== TURN 176 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 42 }, halite: 241, max_halite: 1000 }.
 =============== TURN 177 ================
-Ship 44 have more than 980 halite, returning
-Ship 33 have more than 980 halite, returning
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 43 }, halite: 238, max_halite: 1000 }.
 =============== TURN 178 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 44 }, halite: 238, max_halite: 1000 }.
 =============== TURN 179 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 45 }, halite: 234, max_halite: 1000 }.
+Ship 13 have more than 980 halite, returning
 =============== TURN 180 ================
-Ship 36 have more than 980 halite, returning
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 46 }, halite: 206, max_halite: 1000 }.
 =============== TURN 181 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 184, max_halite: 1000 }.
 =============== TURN 182 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 296, max_halite: 1000 }.
 =============== TURN 183 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 380, max_halite: 1000 }.
 =============== TURN 184 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 443, max_halite: 1000 }.
 =============== TURN 185 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 491, max_halite: 1000 }.
 =============== TURN 186 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 527, max_halite: 1000 }.
+Ship 38 have more than 980 halite, returning
 =============== TURN 187 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 554, max_halite: 1000 }.
 =============== TURN 188 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 574, max_halite: 1000 }.
 =============== TURN 189 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 589, max_halite: 1000 }.
 =============== TURN 190 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 600, max_halite: 1000 }.
 =============== TURN 191 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 608, max_halite: 1000 }.
+Ship 26 have more than 980 halite, returning
 =============== TURN 192 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 614, max_halite: 1000 }.
+Ship 28 have more than 980 halite, returning
 =============== TURN 193 ================
-Ship 64 have more than 980 halite, returning
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 619, max_halite: 1000 }.
 =============== TURN 194 ================
-Ship 5 have more than 980 halite, returning
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 623, max_halite: 1000 }.
 =============== TURN 195 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 626, max_halite: 1000 }.
 =============== TURN 196 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 628, max_halite: 1000 }.
+Ship 17 have more than 980 halite, returning
 =============== TURN 197 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 629, max_halite: 1000 }.
 =============== TURN 198 ================
-Ship 34 have more than 980 halite, returning
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 630, max_halite: 1000 }.
 =============== TURN 199 ================
+Dropoff ship info: Ship { owner: PlayerId(2), id: ShipId(53), position: Position { x: 4, y: 47 }, halite: 631, max_halite: 1000 }.
 =============== TURN 200 ================
+Ship 17 will go to dropoff
+Ship 34 will go to dropoff
+Ship 5 will go to dropoff
+Ship 13 will go to dropoff
+Ship 28 will go to dropoff
+Ship 65 will go to dropoff
+Ship 26 will go to dropoff
+Ship 63 will go to dropoff
+Ship 49 will go to dropoff
+Ship 66 will go to dropoff
+Ship 56 will go to dropoff
 =============== TURN 201 ================
 =============== TURN 202 ================
 =============== TURN 203 ================
+Ship 1 have more than 980 halite, returning
 =============== TURN 204 ================
 =============== TURN 205 ================
 =============== TURN 206 ================
 =============== TURN 207 ================
 =============== TURN 208 ================
 =============== TURN 209 ================
-Ship 31 have more than 980 halite, returning
+Ship 5 already got close to dropoff 2
 =============== TURN 210 ================
-Ship 20 have more than 980 halite, returning
-Ship 63 have more than 980 halite, returning
-Ship 72 have more than 980 halite, returning
 =============== TURN 211 ================
 =============== TURN 212 ================
 =============== TURN 213 ================
+Ship 65 already got close to dropoff 2
 =============== TURN 214 ================
+Ship 28 already got close to dropoff 2
 =============== TURN 215 ================
 =============== TURN 216 ================
+Ship 64 have more than 980 halite, returning
 =============== TURN 217 ================
+Ship 28 have more than 980 halite, returning
 =============== TURN 218 ================
-Ship 16 have more than 980 halite, returning
-Ship 12 have more than 980 halite, returning
+Ship 26 already got close to dropoff 2
 =============== TURN 219 ================
-Ship 66 have more than 980 halite, returning
+Ship 9 have more than 980 halite, returning
 =============== TURN 220 ================
 =============== TURN 221 ================
-Ship 77 have more than 980 halite, returning
 =============== TURN 222 ================
+Ship 17 already got close to dropoff 2
+Ship 26 have more than 980 halite, returning
+Ship 46 have more than 980 halite, returning
 =============== TURN 223 ================
-Ship 44 have more than 980 halite, returning
 =============== TURN 224 ================
+Ship 56 already got close to dropoff 2
 =============== TURN 225 ================
 =============== TURN 226 ================
-Ship 75 have more than 980 halite, returning
 =============== TURN 227 ================
 =============== TURN 228 ================
 =============== TURN 229 ================
 =============== TURN 230 ================
+Ship 17 have more than 980 halite, returning
 =============== TURN 231 ================
-Ship 93 have more than 980 halite, returning
 =============== TURN 232 ================
 =============== TURN 233 ================
 =============== TURN 234 ================
 =============== TURN 235 ================
 =============== TURN 236 ================
 =============== TURN 237 ================
+Ship 5 have more than 980 halite, returning
 =============== TURN 238 ================
+Ship 66 already got close to dropoff 2
+=============== TURN 239 ================
+=============== TURN 240 ================
+=============== TURN 241 ================
+=============== TURN 242 ================
+=============== TURN 243 ================
+=============== TURN 244 ================
+Ship 38 have more than 980 halite, returning
+=============== TURN 245 ================
+=============== TURN 246 ================
+=============== TURN 247 ================
+Ship 34 already got close to dropoff 2
+=============== TURN 248 ================
+=============== TURN 249 ================
+=============== TURN 250 ================
+=============== TURN 251 ================
+=============== TURN 252 ================
+=============== TURN 253 ================
+=============== TURN 254 ================
+=============== TURN 255 ================
+=============== TURN 256 ================
+=============== TURN 257 ================
+=============== TURN 258 ================
+=============== TURN 259 ================
+=============== TURN 260 ================
+Ship 13 have more than 980 halite, returning
+=============== TURN 261 ================
+=============== TURN 262 ================
 Ship 1 have more than 980 halite, returning
-Ship 36 have more than 980 halite, returning
+=============== TURN 263 ================
+=============== TURN 264 ================
+=============== TURN 265 ================
+=============== TURN 266 ================
+=============== TURN 267 ================
+Ship 49 have more than 980 halite, returning
+=============== TURN 268 ================
+=============== TURN 269 ================
+Ship 17 have more than 980 halite, returning
+=============== TURN 270 ================
+Ship 9 have more than 980 halite, returning
+Ship 65 have more than 980 halite, returning
+=============== TURN 271 ================
+=============== TURN 272 ================
+=============== TURN 273 ================
+=============== TURN 274 ================
+=============== TURN 275 ================
+Ship 26 have more than 980 halite, returning
+=============== TURN 276 ================
+=============== TURN 277 ================
+Ship 38 have more than 980 halite, returning
+=============== TURN 278 ================
+=============== TURN 279 ================
+=============== TURN 280 ================
+=============== TURN 281 ================
+Ship 5 have more than 980 halite, returning
+=============== TURN 282 ================
+=============== TURN 283 ================
+=============== TURN 284 ================
+=============== TURN 285 ================
+=============== TURN 286 ================
+=============== TURN 287 ================
+=============== TURN 288 ================
+=============== TURN 289 ================
+=============== TURN 290 ================
+=============== TURN 291 ================
+=============== TURN 292 ================
+Ship 109 have more than 980 halite, returning
+Ship 123 have more than 980 halite, returning
+=============== TURN 293 ================
+=============== TURN 294 ================
+=============== TURN 295 ================
+=============== TURN 296 ================
+Ship 102 have more than 980 halite, returning
+=============== TURN 297 ================
+=============== TURN 298 ================
+Ship 64 have more than 980 halite, returning
+=============== TURN 299 ================
+=============== TURN 300 ================
+=============== TURN 301 ================
+=============== TURN 302 ================
+Ship 99 have more than 980 halite, returning
+=============== TURN 303 ================
+=============== TURN 304 ================
+=============== TURN 305 ================
+=============== TURN 306 ================
+=============== TURN 307 ================
+=============== TURN 308 ================
+=============== TURN 309 ================
+=============== TURN 310 ================
+Ship 119 have more than 980 halite, returning
+=============== TURN 311 ================
+Ship 140 have more than 980 halite, returning
+Ship 28 have more than 980 halite, returning
+=============== TURN 312 ================
+=============== TURN 313 ================
+=============== TURN 314 ================
+=============== TURN 315 ================
+Ship 133 have more than 980 halite, returning
+=============== TURN 316 ================
+=============== TURN 317 ================
+Ship 13 have more than 980 halite, returning
+Ship 66 have more than 980 halite, returning
+Ship 104 have more than 980 halite, returning
+=============== TURN 318 ================
+=============== TURN 319 ================
+Ship 114 have more than 980 halite, returning
+=============== TURN 320 ================
+=============== TURN 321 ================
